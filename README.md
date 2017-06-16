@@ -27,7 +27,7 @@ Code generation is quite straightforward, the only thing to do is add the plugin
                     <enableBuilderSupport>true</enableBuilderSupport>
                     <codegenInfos>
                         <codegenInfo>
-                            <fileName>${project.basedir}/../yaml-definitions-box/yourpath/to/REST-api-def.yaml</fileName>
+                            <fileName>url/or/path/to/REST-api-def.yaml</fileName>
                             <apiPackage>com.yourdomain.rest.api</apiPackage>
                             <modelPackage>com.yourdomain.rest.model</modelPackage>
                         </codegenInfo>
@@ -79,9 +79,9 @@ Configuration parameters
 | language               | Codegen target language (*)                                       | true      | custom-spring |
 | enableBuilderSupport   | enables builder style for model classes                           | false     | false |
 | outputDirectory        | base output directory for generated files                         | true      | (**) |
-| ci.fileName            | YAML file path                                                    | true      | --- |
-| ci.apiPackage          | target package for API classes                                    | false      | --- |
-| ci.modelPackage        | target package for model classes                                  | false      | --- |
+| ci.fileName            | YAML file path or URL                                             | true      | --- |
+| ci.apiPackage          | target package for API classes                                    | false     | --- |
+| ci.modelPackage        | target package for model classes                                  | false     | --- |
 | ci.skipApi             | excludes API classes generation                                   | false     | false |
 | ci.skipModel           | excludes model classes generation                                 | false     | false |
 | excludeSupportingFiles | excludes supporting files generation                              | false     | --- |
