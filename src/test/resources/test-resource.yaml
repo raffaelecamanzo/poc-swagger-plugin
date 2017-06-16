@@ -1,0 +1,213 @@
+swagger: '2.0'
+info:
+  title: test RESTful API
+  description: A meaningful description
+  version: "1.0.0"
+host: localhost
+schemes:
+  - https
+basePath: /my-application/v1
+produces:
+  - application/json
+  - application/xml
+paths:
+  /path/to/resources:
+    get:
+      summary: Get the resources
+      operationId: getAllTheResources
+      description: |
+        A way to retrieve the resources
+      tags:
+      - My resources
+      parameters:
+        - name: meaningful_query_param
+          in: query
+          description: something which makes sense in your domain
+          required: false
+          type: string
+      responses:
+        200:
+          description: Everything ok!
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MyResource'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    head:
+      summary: Get the resources header
+      operationId: headForAllTheResources
+      description: |
+        My resources header
+      tags:
+      - My resources
+      parameters:
+        - name: meaningful_query_param
+          in: query
+          description: something which makes sense in your domain
+          required: false
+          type: string
+      responses:
+        200:
+          description: Everything ok!
+        default:
+          description: Unexpected error
+    post:
+      summary: Add a new resource
+      operationId: insertNewResource
+      description: |
+         Add a new resource to the list of resources
+      tags:
+        - My resources
+      parameters:
+        - name: payload
+          in: body
+          description: The resource to add
+          required: true
+          schema:
+            $ref: '#/definitions/MyResource'
+      responses:
+        201:
+          description: Resource inserted!
+        400:
+          description: Wrong payload
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /path/to/resources/{resource_id}:
+    get:
+      summary: Get a specific resource
+      operationId: getTheResourcesWithId
+      description: |
+         The resource i want.
+      parameters:
+        - name: resource_id
+          in: path
+          description: The resource id.
+          required: true
+          type: string
+      tags:
+        - Manage resource
+      responses:
+        200:
+          description: Everything ok!
+          schema:
+            $ref: '#/definitions/MyResource'
+        404:
+          description: Resource not found
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: Modify a resource
+      operationId: updateResource
+      description: |
+         Modify the resource with the given id
+      tags:
+        - Manage resource
+      parameters:
+        - name: resource_id
+          in: path
+          description: The resource id.
+          required: true
+          type: string
+        - name: payload
+          in: body
+          description: The resource to add
+          required: true
+          schema:
+            $ref: '#/definitions/MyResource'
+      responses:
+        204:
+          description: Resource modified!
+        400:
+          description: Wrong payload
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Resource not found
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Delete a resource
+      operationId: deleteResource
+      description: |
+         Delete the resource with the given id
+      tags:
+        - Manage resource
+      parameters:
+        - name: resource_id
+          in: path
+          description: The resource id.
+          required: true
+          type: string
+      responses:
+        200:
+          description: Resource deleted (get it if you need it!)
+          schema:
+            $ref: '#/definitions/MyResource'
+        404:
+          description: Resource not found
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+definitions:
+  MyResource:
+    type: object
+    description: Resource definition
+    properties:
+      resource_id:
+        type: string
+        description: Some meaningful identifier
+      content_string:
+        type: string
+        description: Some content string
+      subresource_array:
+        type: array
+        description: |
+          An array of nested data
+        items:
+          $ref: './test-defs.yaml#/definitions/MySubResource'
+      content_bool:
+        type: boolean
+        description: |
+          resource boolean value
+      content_int:
+        type: integer
+        format: int32
+        description: |
+          resource integer value
+      content_enum:
+        $ref: '#/definitions/MyResourceEnum'
+  MyResourceEnum:
+    type: string
+    enum:
+      - VALUE1
+      - VALUE2
+      - VALUE3
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string

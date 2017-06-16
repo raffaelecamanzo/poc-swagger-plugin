@@ -1,0 +1,37 @@
+swagger: '2.0'
+definitions:
+  MySubResource:
+    type: object
+    description: |
+      A resource in a different file
+    properties:
+      subresource_id:
+        type: string
+        description: Meaningful id
+      content_data:
+        type: string
+        format: binary
+        description: Nested data
+      content_enum:
+        $ref: '#/definitions/MySubResourceEnumContainer'
+  MySubResourceEnumContainer:
+    type: object
+    description: |
+      An object with two enum elements
+    properties:
+      enum_one:
+        $ref: '#/definitions/EnumOne'
+      desc:
+        $ref: '#/definitions/EnumTwo'
+  EnumOne:
+    type: string
+    enum:
+      - EONE1
+      - EONE2
+      - EONE3
+  EnumTwo:
+    type: string
+    enum:
+      - ETWO1
+      - ETWO2
+      - ETWO3

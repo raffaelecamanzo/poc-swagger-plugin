@@ -1,0 +1,8 @@
+{{#isFormParam}}{{#notFile}}
+    // "{{paramName}}"
+    @ApiParam(name="{{baseName}}", value = "{{{description}}}"{{#required}}, required=true{{/required}} {{#allowableValues}}, allowableValues="{{{allowableValues}}}"{{/allowableValues}}{{#defaultValue}}, defaultValue="{{{defaultValue}}}"{{/defaultValue}})
+    @RequestParam(value="{{baseName}}"{{#required}}, required=true{{/required}}{{^required}}, required=false{{/required}})  {{{dataType}}} {{paramName}}{{/notFile}}{{#isFile}}
+    // "{{paramName}}"
+    @ApiParam(name="{{baseName}}", value = "file data stream")
+    @RequestPart("file") MultipartFile {{paramName}}{{/isFile}}
+{{/isFormParam}}

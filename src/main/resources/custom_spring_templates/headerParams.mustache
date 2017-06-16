@@ -1,0 +1,6 @@
+{{#isHeaderParam}}
+
+        // "{{paramName}}"
+        @ApiParam(value = "{{{description}}}" {{#required}},required=true{{/required}} {{#allowableValues}}, allowableValues="{{{allowableValues}}}"{{/allowableValues}}{{#defaultValue}}, defaultValue="{{{defaultValue}}}"{{/defaultValue}})
+        @RequestHeader({{#required}}"{{baseName}}"{{/required}}{{^required}}value="{{baseName}}", required=false{{/required}})
+        {{{dataType}}} {{paramName}}{{/isHeaderParam}}

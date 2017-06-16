@@ -1,0 +1,100 @@
+package {{package}};
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+{{#imports}}import {{import}};
+{{/imports}}
+{{#models}}
+
+{{#model}}
+
+import {{package}}.{{classname}}.*;
+
+{{#isEnum}}
+/**
+ * AUTO-GENERATED CLASS. DO NOT EDIT!!!
+ *
+ * package: "{{package}}"
+ *
+ **/
+@ApiModel(description = "{{{description}}}")
+public enum {{classname}} {
+{{#allowableValues}}
+    {{#values}}{{.}},{{/values}}
+{{/allowableValues}}
+}
+{{/isEnum}}
+{{^isEnum}}
+/**
+ * AUTO-GENERATED CLASS. DO NOT EDIT!!!
+ *
+ * package: "{{package}}"
+ *
+ **/
+@ApiModel(description = "{{{description}}}")
+public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {
+{{#vars}}{{#isEnum}}
+    public enum {{datatypeWithEnum}} {
+    {{#allowableValues}}{{#values}} {{.}}, {{/values}}{{/allowableValues}}
+    };
+    private {{{datatypeWithEnum}}} {{name}} = {{{defaultValue}}};{{/isEnum}}{{^isEnum}}
+    private {{{datatype}}} {{name}} = {{{defaultValue}}};{{/isEnum}}{{/vars}}
+
+    public static {{classname}}Builder builder() {
+        return new {{classname}}Builder();
+    }
+
+{{#vars}}
+    /**{{#description}}
+        * {{{description}}}{{/description}}{{#minimum}}
+        * minimum: {{minimum}}{{/minimum}}{{#maximum}}
+        * maximum: {{maximum}}{{/maximum}}
+    **/
+    @ApiModelProperty({{#required}}required = {{required}}, {{/required}}value = "{{{description}}}")
+    @JsonProperty("{{baseName}}")
+    public {{{datatypeWithEnum}}} {{getter}}() {
+    return {{name}};
+    }
+    public void {{setter}}({{{datatypeWithEnum}}} {{name}}) {
+    this.{{name}} = {{name}};
+    }
+
+{{/vars}}
+
+    @Override
+    public String toString()  {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class {{classname}} {");
+        {{#parent}}sb.append("  " + super.toString()).append("\n");{{/parent}}
+        {{#vars}}sb.append("  {{name}}: ").append({{name}}).append("\n");
+        {{/vars}}sb.append("}");
+        return sb.toString();
+    }
+
+
+    public static class {{classname}}Builder {
+{{#vars}}
+        private {{{datatypeWithEnum}}} {{name}};
+{{/vars}}
+
+{{#vars}}
+        public {{classname}}Builder {{name}}({{{datatypeWithEnum}}} {{name}}) {
+            this.{{name}} = {{name}};
+            return this;
+        }
+
+{{/vars}}
+
+        public {{classname}} build()  {
+            final {{classname}} model = new {{classname}}();
+{{#vars}}
+            model.{{name}} = this.{{name}};
+{{/vars}}
+            return model;
+        }
+    }
+}
+
+{{/isEnum}}
+{{/model}}
+{{/models}}
