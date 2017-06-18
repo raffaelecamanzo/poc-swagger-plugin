@@ -179,38 +179,18 @@ public class CustomSpringConfigJavaClientCodegen extends JavaClientCodegen imple
 					}
 				}
 				LOG.info("Return type: {} - return container: {} - operation id: {}", operation.returnType, operation.returnContainer, operation.operationId);
+				LOG.info("Response type defaults to ResponseEntity!");
+				operation.returnType = "ResponseEntity";
 				if(multipleResponseTypes) {
-					operation.returnType = "ResponseEntity";
 					if(operation.returnContainer!=null) {
 						operation.returnContainer = null;
 						operation.isListContainer = false;
 						operation.isMapContainer = false;
 					}
-					LOG.info("Multiple response types, overriding to: {}", operation.returnType);
-				} else 	if (operation.returnType == null) {
-					operation.returnType = getVoidReturnType();
-				} else if (operation.returnType.startsWith("List")) {
-					String rt = operation.returnType;
-					int end = rt.lastIndexOf(">");
-					if (end > 0) {
-						operation.returnType = rt.substring("List<".length(), end).trim();
-						operation.returnContainer = "List";
-					}
-				} else if (operation.returnType.startsWith("Map")) {
-					String rt = operation.returnType;
-					int end = rt.lastIndexOf(">");
-					if (end > 0) {
-						operation.returnType = rt.substring("Map<".length(), end).split(",")[1].trim();
-						operation.returnContainer = "Map";
-					}
 				}
 			}
 		}
 		return objs;
-	}
-
-	private String getVoidReturnType() {
-		return "void";
 	}
 
 	public void setApiPackage(final String apiPackage) {

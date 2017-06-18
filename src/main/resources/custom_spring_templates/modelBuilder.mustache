@@ -1,7 +1,5 @@
 package {{package}};
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 {{#imports}}import {{import}};
 {{/imports}}
 {{#models}}
@@ -17,7 +15,6 @@ import {{package}}.{{classname}}.*;
  * package: "{{package}}"
  *
  **/
-@ApiModel(description = "{{{description}}}")
 public enum {{classname}} {
 {{#allowableValues}}
     {{#values}}{{.}},{{/values}}
