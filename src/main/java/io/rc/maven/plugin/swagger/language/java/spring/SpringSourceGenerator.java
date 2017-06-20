@@ -1,8 +1,8 @@
 package io.rc.maven.plugin.swagger.language.java.spring;
 
-import io.rc.maven.plugin.swagger.mojo.CodegenInfo;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
+import io.rc.maven.plugin.swagger.mojo.CodegenInfo;
 import io.swagger.codegen.ClientOptInput;
 import io.swagger.codegen.ClientOpts;
 import io.swagger.codegen.CodegenConfig;
@@ -15,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -38,16 +36,14 @@ public class SpringSourceGenerator {
 	private boolean enableBuilderSupport;
 	private boolean excludeSupportingFiles;
 	private Map<String, Object> additionalProperties;
-	private List<String> excludedModels;
-
 
 	public static SpringSourceGeneratorBuilder builder() {
 		return new SpringSourceGeneratorBuilder();
 	}
 
 	public void generate() throws Exception {
-		if(!getOutputDirectory().exists()) {
-			getOutputDirectory().mkdirs();
+		if(!outputDirectory.exists()) {
+			outputDirectory.mkdirs();
 		}
 
 		prepare();
@@ -56,17 +52,10 @@ public class SpringSourceGenerator {
 		for(CodegenInfo codegenInfo : codegenInfos) {
 			LOG.info("Generating code for language: {}", language);
 
-			checkModelPackage(codegenInfo);
-			checkFileExists(codegenInfo);
-
 			final CodegenConfig codegenConfig = getCodegenConfig(language);
-			if(codegenConfig == null) {
-				throw new Exception("No CodegenConfig-Implementation found for " + language);
-			}
 			codegenConfig.additionalProperties().putAll(additionalProperties);
 			if(codegenConfig instanceof CustomSpringConfig) {
 
-				// config
 				if(!Strings.isNullOrEmpty(codegenInfo.getApiPackage())) {
 					((CustomSpringConfig) codegenConfig).setApiPackage(codegenInfo.getApiPackage());
 				}
@@ -110,15 +99,6 @@ public class SpringSourceGenerator {
 			if(codegenInfo.isSkipModel() || Strings.isNullOrEmpty(codegenInfo.getModelPackage())) {
 				LOG.info("MODEL GEN DISABLED!");
 				swagger.setDefinitions(new HashMap<String, Model>(0));
-			} else if(!excludedModels.isEmpty()) {
-				final Iterator<Map.Entry<String, Model>> it = swagger.getDefinitions().entrySet().iterator();
-				while(it.hasNext()) {
-					final Map.Entry<String, Model> entry = it.next();
-					if(excludedModels.contains(entry.getKey())) {
-						LOG.info("REMOVED {} from MODEL generation", entry.getKey());
-						it.remove();
-					}
-				}
 			}
 
 			try {
@@ -133,37 +113,9 @@ public class SpringSourceGenerator {
 	}
 
 	public String getOutputDirectoryPath() {
-		return getOutputDirectory().getAbsolutePath();
+		return outputDirectory.getAbsolutePath();
 	}
 
-	protected void checkModelPackage(CodegenInfo codegenInfo) {
-		if(codegenInfo.getModelPackage() == null || codegenInfo.getModelPackage().trim().isEmpty()) {
-			LOG.info("No 'modelPackage' was specified, use configured 'apiPackage' ({}) for YAML file {} ", codegenInfo.getApiPackage(), codegenInfo.getFileName());
-			codegenInfo.setModelPackage(codegenInfo.getApiPackage());
-		}
-	}
-
-	protected void checkFileExists(CodegenInfo codegenInfo) throws Exception {
-		try {
-			URL url = new URL(codegenInfo.getFileName());
-			String prot = url.getProtocol();
-			if ((!"https".equals(prot)) || (!"http".equals(prot))) {
-				LOG.info("'fileName' should use 'http' or 'https'");
-			}
-			//return;
-		} catch (MalformedURLException e) {
-			LOG.info("'fileName' seems not be an valid URL, check file exist");
-			final File file = new File(codegenInfo.getFileName());
-			if(!file.exists()) {
-				LOG.info("The 'fileName' does not exists at : " + codegenInfo.getFileName());
-				throw new Exception("The 'fileName' does not exists at : " + codegenInfo.getFileName());
-			}
-		}
-	}
-
-	public File getOutputDirectory() {
-		return this.outputDirectory;
-	}
 
 	protected void prepare() {
 		final List<CodegenConfig> codegenServices = getCodegenServices();
@@ -175,19 +127,10 @@ public class SpringSourceGenerator {
 	}
 
 	private CodegenConfig getCodegenConfig(final String name) {
-		if(configMap.containsKey(name)) {
+		if(configMap.containsKey(name))
 			return configMap.get(name);
-		} else {
-			try {
-				LOG.info("Loading custom class: {}", name);
 
-				final Class<?> customClass = Class.forName(name);
-				LOG.info("Custom class {} loaded", name);
-				return (CodegenConfig) customClass.newInstance();
-			} catch (final Exception e) {
-				throw new RuntimeException("can't load config-class for '" + name + "'", e);
-			}
-		}
+		throw new RuntimeException("No codegen available for the given name: "+name);
 	}
 
 	private List<CodegenConfig> getCodegenServices() {
@@ -208,7 +151,6 @@ public class SpringSourceGenerator {
 		private File outputDirectory;
 		private boolean enableBuilderSupport = false;
 		private boolean excludeSupportingFiles = false;
-		private List<String> excludedModels = new ArrayList<String>(0);
 		private Map<String, Object> additionalProperties =  ImmutableMap.of();
 
 		public SpringSourceGeneratorBuilder withCodegenInfos(final List<CodegenInfo> codegenInfos) {
@@ -223,11 +165,6 @@ public class SpringSourceGenerator {
 
 		public SpringSourceGeneratorBuilder writeStubTo(final File outputDirectory) {
 			this.outputDirectory = outputDirectory;
-			return this;
-		}
-
-		public SpringSourceGeneratorBuilder withModelsExcluded(final List<String> excludedResources) {
-			this.excludedModels = excludedResources;
 			return this;
 		}
 
@@ -252,7 +189,6 @@ public class SpringSourceGenerator {
 			generator.codegenInfos = this.codegenInfos;
 			generator.language = this.language;
 			generator.outputDirectory = this.outputDirectory;
-			generator.excludedModels = this.excludedModels;
 			generator.enableBuilderSupport = this.enableBuilderSupport;
 			generator.additionalProperties = this.additionalProperties;
 			generator.excludeSupportingFiles = this.excludeSupportingFiles;

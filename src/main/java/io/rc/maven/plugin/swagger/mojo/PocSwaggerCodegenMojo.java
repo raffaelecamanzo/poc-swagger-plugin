@@ -64,7 +64,6 @@ public class PocSwaggerCodegenMojo extends AbstractMojo {
 		final SpringSourceGenerator generator = SpringSourceGenerator.builder().withCodegenInfos(codegenInfos)
 				.forLanguage(language)
 				.writeStubTo(outputDirectory)
-				.withModelsExcluded(excludedModels)
 				.additionalProperties(additionalProperties)
 				.enableBuilderSupport(enableBuilderSupport)
 				.excludeSupportingFiles(excludeSupportingFiles)
