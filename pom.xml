@@ -16,7 +16,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <slf4j.version>1.7.21</slf4j.version>
-    <swagger.version>2.2.1</swagger.version>
+    <swagger.version>2.2.2</swagger.version>
     <maven.version>3.1.1</maven.version>
     <maven.annotation.version>3.3</maven.annotation.version>
     <maven.archiver.version>2.6</maven.archiver.version>

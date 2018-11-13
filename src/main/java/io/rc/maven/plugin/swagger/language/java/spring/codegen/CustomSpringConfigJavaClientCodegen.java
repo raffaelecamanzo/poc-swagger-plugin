@@ -106,7 +106,7 @@ public class CustomSpringConfigJavaClientCodegen extends JavaClientCodegen imple
 	                                final CodegenOperation co,
 	                                final Map<String, List<CodegenOperation>> operations) {
 
-		LOG.debug("Codegen Operation. path: {} - subresource OP: {}", co.path, co.subresourceOperation!=null ? (co.subresourceOperation ? "YES" : "NO") : "NO");
+		LOG.debug("Codegen Operation. path: {} - subresource OP: {}", co.path, co.subresourceOperation ? "YES" : "NO");
 		LOG.debug("Codegen Operation. baseName: {}", co.baseName);
 		String basePath = resourcePath;
 		if (basePath.startsWith("/")) {
